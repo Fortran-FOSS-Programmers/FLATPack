@@ -1,4 +1,7 @@
 # FLATPack
+
+[![Join the chat at https://gitter.im/Fortran-FOSS-Programmers/FLATPack](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Fortran-FOSS-Programmers/FLATPack?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Fortran Library, Application, and Toolkit Packages
 
 FLATPack is a collection of package files for the [Spack](https://spack.readthedocs.io/en/latest/) 
