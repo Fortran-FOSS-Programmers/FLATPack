@@ -1,0 +1,63 @@
+##############################################################################
+# Copyright (c) 2013-2016, Lawrence Livermore National Security, LLC.
+# Produced at the Lawrence Livermore National Laboratory.
+#
+# This file is part of Spack.
+# Created by Todd Gamblin, tgamblin@llnl.gov, All rights reserved.
+# LLNL-CODE-647188
+#
+# For details, see https://github.com/llnl/spack
+# Please also see the LICENSE file for our notice and the LGPL.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License (as
+# published by the Free Software Foundation) version 2.1, February 1999.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the IMPLIED WARRANTY OF
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the terms and
+# conditions of the GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+##############################################################################
+
+from spack import *
+
+
+class PyFord(Package):
+    """This is an automatic documentation generator for modern Fortran
+    programs. FORD stands for FORtran Documenter. Its goal is to be able
+    to reliably produce documentation for modern Fortran software which is
+    informative and nice to look at. The documentation should be easy to
+    write and non-obtrusive within the code. While it will never be as
+    feature-rich as Doxygen, hopefully FORD will be able to provide a good
+    alternative for documenting Fortran projects.
+    """
+
+    homepage = "http://github.com/cmacmackin/ford"
+    url      = "https://github.com/cmacmackin/ford/archive/v5.0.6.tar.gz"
+
+    version('5.0.6', '66c5c08516a50461343c1754c9304cf1')
+    version('5.0.5', '41c151b812481ae9d6f363414e66ee38')
+    version('5.0.4', '9f05e33a075b4cbfbe8c795f10908873')
+    version('5.0.3', '11a1e27310a5d5f08f21f6fbbb7e55b5')
+    version('5.0.2', '6800f0251641868c89a5cfebcc2e02be')
+    version('5.0.1', 'fc37c100dd636ab26116f9b565cdabc2')
+    version('5.0.0', '16018a785ca609fee2f28c4122ac4d29')
+    version('4.6.2', 'b7a50868e579c69ece4240885338d02e')
+    version('4.6.1', 'ced94e76b5b749050d4657eee84f5ae1')
+    version('4.6.0', '689d831d4e120e7ab2a7b0a4e5747f73')
+
+    extends('python')
+
+    depends_on('py-setuptools', type='build')
+    depends_on('graphviz', type='run')
+    depends_on('py-markdown', type=nolink)
+    depends_on('py-beautifulsoup4@4.5.1:', type=nolink)
+    depends_on('py-jinja2@2.1:', type=nolink)
+    depends_on('py-pygments', type=nolink)
+
+    def install(self, spec, prefix):
+        setup_py('install', '--prefix={0}'.format(prefix))
