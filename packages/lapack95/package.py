@@ -85,19 +85,28 @@ class Lapack95(Package):
             install('lapack95.a', join_path(prefix.lib, 'liblapack95.a'))
 
         if spec.satisfies('+shared'):
+            print(repr(spec.version))
             filter_file(r'OPTS0\s*=.*',
                         'OPTS0 = {}'.format(cflags+shared_cflag),
                         'make.inc')
             filter_file(r'la_\wlagge\.o', '', join_path('SRC', 'makefile'))
-            link = r'\1$(FC) {} -o ../liblapack95.so \2 {} -Wl,--no-undefined'
-            link = link.format(lflags+shared_lflag, linalg.ld_flags)
+            libname = 'liblapack95.so'
+            soname = libname + '.' + spec.version.up_to(1)
+            filename = libname + '.' + spec.version.dotted
+            link = r'\1$(FC) {} -o ../{} \2 {} -Wl,--no-undefined '\
+                   '-Wl,-soname,{}'
+            link = link.format(lflags+shared_lflag, filename,
+                               linalg.ld_flags, soname)
             filter_file(r'(\s*)ar cr \.\./lapack95\.a (.*)', link,
                         join_path('SRC', 'makefile'))
             filter_file(r'\s*ranlib .*', '', join_path('SRC', 'makefile'))
             make('-C', 'SRC', 'clean')
             make('-C', 'SRC', 'single_double_complex_dcomplex')
-            fc = which('fc')
-            install('liblapack95.so', prefix.lib)
+            install(filename, prefix.lib)
+            with working_dir(prefix.lib):
+                ln = which('ln')
+                ln('-s', filename, soname)
+                ln('-s', soname, libname)          
 
         if spec.satisfies('+shared') or spec.satisfies('+static'):
             install(join_path('lapack95_modules', 'f95_lapack.mod'),
