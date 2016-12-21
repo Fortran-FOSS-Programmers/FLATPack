@@ -29,7 +29,6 @@ from os import remove as rm
 class Face(Package):
     """Fortran Ansi Colors (and Styles) Environment."""
 
-    # FIXME: Add a proper url for your package's homepage here.
     homepage = "https://github.com/szaghi/FACE"
     url      = "https://github.com/szaghi/FACE/archive/v1.0.1.tar.gz"
 
@@ -62,12 +61,14 @@ class Face(Package):
             lflags += " -Ofast"
             cflags_shared += " -fPIC"
             lflags_shared += " -shared"
-        if spec.satisfies('%intel'):
+        elif spec.satisfies('%intel'):
             compiler.append("intel")
             cflags += " -fast -assume realloc_lhs -standard-semantics -std08"
             lflags += " -fast"
             cflags_shared += " -fpic"
             lflags_shared += " -shared"
+        else:
+            raise InstallError("Unsported compiler.")
 
         if spec.satisfies('+shared'):
             fobis_options = command + compiler + \
