@@ -39,10 +39,10 @@ class Flogging(Package):
     homepage = "https://cmacmackin.github.io/flogging/"
     url      = "https://github.com/cmacmackin/flogging/archive/v1.0.0.tar.gz"
 
-    version('1.0.0', 'e81ad12a45a6af8c1e673ab97956e27f')
+    version('1.0.1', 'ceb6ddbb72fe0e8f2483cc26a51c2e1f')
     
     depends_on('face')
-    depends_on('py-fobis-py', type='build')
+    depends_on('py-fobis-py@2.2.2:', type='build')
 
     variant('shared', default=True, description='Build shared libraries')
     variant('static', default=True, description='Build static library')
@@ -54,10 +54,20 @@ class Flogging(Package):
             compiler = 'gnu'
         elif spec.satisfies('%intel'):
             compiler = 'intel'
-        
+        else:
+            raise InstallError("Unsported compiler")
+
         if spec.satisfies('+shared'):
+            libname = 'libflogging.so'
+            soname = libname + '.' + spec.version.up_to(1)
+            filename = libname + '.' + spec.version.dotted
             fobis('build', '-mode', '{}-shared'.format(compiler))
-            install(join_path('build', 'libflogging.so'), prefix.lib)
+            install(join_path('build', filename), prefix.lib)
+            with working_dir(prefix.lib):
+                ln = which('ln')
+                ln('-s', filename, soname)
+                ln('-s', soname, libname)
+
         if spec.satisfies('+static'):
             fobis('build', '-mode', '{}-static'.format(compiler))
             install(join_path('build', 'libflogging.a'), prefix.lib)

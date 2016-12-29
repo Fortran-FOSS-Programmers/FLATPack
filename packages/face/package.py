@@ -60,7 +60,7 @@ class Face(Package):
             cflags += " -Ofast -frealloc-lhs -std=f2008 -fall-intrinsics"
             lflags += " -Ofast"
             cflags_shared += " -fPIC"
-            lflags_shared += " -shared"
+            lflags_shared += " -shared "
         elif spec.satisfies('%intel'):
             compiler.append("intel")
             cflags += " -fast -assume realloc_lhs -standard-semantics -std08"
@@ -71,13 +71,21 @@ class Face(Package):
             raise InstallError("Unsported compiler.")
 
         if spec.satisfies('+shared'):
+            libname = 'libface.so'
+            soname = libname + '.' + spec.version.up_to(1)
+            filename = libname + '.' + spec.version.dotted
             fobis_options = command + compiler + \
                             ["-cflags", cflags + cflags_shared] + \
-                            ["-lflags", lflags + lflags_shared] + \
+                            ["-lflags", lflags + lflags_shared +
+                             '-Wl,-soname,' + soname] + \
                             ["-mklib", "shared"] + target + \
-                            ["-o", "libface.so"]
+                            ["-o", filename]
             fobis(*fobis_options)
-            install('libface.so', prefix.lib)
+            install(filename, prefix.lib)
+            with working_dir(prefix.lib):
+                ln = which('ln')
+                ln('-s', filename, soname)
+                ln('-s', soname, libname)
 
         if spec.satisfies('+static'):
             fobis_options = command + compiler + ["-cflags", cflags] + \

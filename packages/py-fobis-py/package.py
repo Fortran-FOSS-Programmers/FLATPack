@@ -35,6 +35,8 @@ class PyFobisPy(Package):
     url      = "https://pypi.python.org/packages/e1/46/a1f93037bc1e56abf3acfadd04b8c41ba083a2a396b8a2d1113ea8382abc/FoBiS.py-2.1.0.tar.gz"
 
     version('2.1.0', 'f385ca06ff72b3dbe19eac80a1a3e0fd')
+    version('2.2.2', '443c6c3103e702b9fdde2cf78c71774d',
+            url='https://pypi.python.org/packages/54/8e/aa0421da748d5338a2b7fd03919ff31ad3be683975893da610282260a935/FoBiS.py-2.2.2.tar.gz')
 
     extends('python')
 

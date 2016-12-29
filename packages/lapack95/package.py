@@ -85,7 +85,6 @@ class Lapack95(Package):
             install('lapack95.a', join_path(prefix.lib, 'liblapack95.a'))
 
         if spec.satisfies('+shared'):
-            print(repr(spec.version))
             filter_file(r'OPTS0\s*=.*',
                         'OPTS0 = {}'.format(cflags+shared_cflag),
                         'make.inc')
@@ -106,7 +105,7 @@ class Lapack95(Package):
             with working_dir(prefix.lib):
                 ln = which('ln')
                 ln('-s', filename, soname)
-                ln('-s', soname, libname)          
+                ln('-s', soname, libname)
 
         if spec.satisfies('+shared') or spec.satisfies('+static'):
             install(join_path('lapack95_modules', 'f95_lapack.mod'),
